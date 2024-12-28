@@ -32,124 +32,110 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>新增客戶</title>
-  <style>
-    body {
-      margin: 0px;
-    }
-    a {
-      text-decoration: none;
-      font-family: 微軟正黑體,新細明體,標楷體;
-      font-weight: bold;
-      font-size: 17px;
-    }
-    .menu {
-      position: fixed;
-      width: 100%;
-      height: 40px;
-      background-color: dimgrey;
-      z-index: 9999999;
-    }
-    .menu a {
-      color: white;
-    }
-    .content {
-      position: relative;
-      top: 40px;
-      background-color: #f1f1f1;
-      padding: 20px;
-    }
-    table {
-      width: 100%;
-      background-color: white;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 10px;
-      text-align: left;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 5px;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-  <script>
-    function toggleDisplay() {
-        const resultTable = document.getElementById("resultTable");
-        if (resultTable.classList.contains("hidden")) {
-            resultTable.classList.remove("hidden");
-        } else {
-            resultTable.classList.add("hidden");
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增客戶</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 微軟正黑體, 新細明體, 標楷體, Arial, sans-serif;
         }
-    }
-  </script>
+        .menu {
+            background-color: dimgrey;
+            color: white;
+            padding: 10px;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .content {
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: dimgrey;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .message {
+            margin: 10px 0;
+            color: green;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: dimgrey;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+    </style>
+    <script>
+        function toggleDisplay() {
+            const resultTable = document.getElementById("resultTable");
+            if (resultTable.classList.contains("hidden")) {
+                resultTable.classList.remove("hidden");
+            } else {
+                resultTable.classList.add("hidden");
+            }
+        }
+    </script>
 </head>
 <body>
-  <div class="menu">
-    <table>
-      <tr>
-        <td><a href="../index.php">Home</a></td>
-        <td><a href="customer_list.php">客戶列表</a></td>
-        <td><a href="customer_add.php">新增客戶</a></td>
-      </tr>
-    </table>
-  </div>
-  <div class="content">
-    <h2>新增客戶</h2>
-    <form id="customerForm" method="post" action="">
-      <table>
-        <tr>
-          <td>客戶名稱：</td>
-          <td><input type="text" name="name" required /></td>
-        </tr>
-        <tr>
-          <td>聯絡電話：</td>
-          <td><input type="text" name="phone" required /></td>
-        </tr>
-        <tr>
-          <td>左手尺寸：</td>
-          <td><input type="text" name="leftsize" placeholder='例如: [12,14,16,14,16]' required /></td>
-        </tr>
-        <tr>
-          <td>右手尺寸：</td>
-          <td><input type="text" name="rightsize" placeholder='例如: [12,14,16,14,16]' required /></td>
-        </tr>
-      </table>
-      <br />
-      <input type="submit" name="submit" value="新增客戶" />
-    </form>
-
-    <br />
-
-    <!-- 顯示新增結果 -->
-    <h3><?php echo $message; ?></h3>
-
-    <!-- 顯示按鈕和結果表格 -->
-    <?php if ($lastId): ?>
-      <button onclick="toggleDisplay()">顯示/隱藏新增資料</button>
-      <table id="resultTable" class="hidden">
-        <tr>
-          <th>ID</th>
-          <th>名稱</th>
-          <th>電話</th>
-          <th>左手尺寸</th>
-          <th>右手尺寸</th>
-        </tr>
-        <tr>
-          <td><?php echo $lastId; ?></td>
-          <td><?php echo htmlspecialchars($name); ?></td>
-          <td><?php echo htmlspecialchars($phone); ?></td>
-          <td><?php echo htmlspecialchars($leftsize); ?></td>
-          <td><?php echo htmlspecialchars($rightsize); ?></td>
-        </tr>
-      </table>
-    <?php endif; ?>
-  </div>
+    <div class="menu">
+        <a href="../index.php">Home</a> |
+        <a href="consume_add.php">新增交易</a> |
+        <a href="product_add.php">新增產品</a>
+    </div>
+    <div class="content">
+        <h2>新增客戶</h2>
+        <?php if (!empty($message)): ?>
+            <p class="message"><?php echo htmlspecialchars($message); ?></p>
+        <?php endif; ?>
+        <form id="customerForm" method="post" action="">
+            <table>
+                <tr>
+                    <td>客戶名稱：</td>
+                    <td><input type="text" name="name" required /></td>
+                </tr>
+                <tr>
+                    <td>聯絡電話：</td>
+                    <td><input type="text" name="phone" required /></td>
+                </tr>
+                <tr>
+                    <td>左手尺寸：</td>
+                    <td><input type="text" name="leftsize" placeholder='例如: [12,14,16,14,16]' required /></td>
+                </tr>
+                <tr>
+                    <td>右手尺寸：</td>
+                    <td><input type="text" name="rightsize" placeholder='例如: [12,14,16,14,16]' required /></td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="新增客戶" />
+        </form>
+        
+    </div>
 </body>
 </html>

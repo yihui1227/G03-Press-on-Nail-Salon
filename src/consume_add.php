@@ -100,24 +100,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       var priceSelect = document.getElementById('amount');
       
       priceSelect.innerHTML = '<option value="">選擇價格</option>';
+
       
       if (productId) {
         var products = <?php echo json_encode($products); ?>;
-        var selectedProduct = products.find(product => product.product_id == productId);
+        const selectedProduct = products.find(product => product.product_id == productId);
 
         if (selectedProduct) {
-          var prices = [
+          const prices = [
             { label: '原價 NT$', value: selectedProduct.original },
             { label: '模特價 NT$', value: selectedProduct.model },
             { label: '親友價 NT$', value: selectedProduct.friend }
           ];
 
-          prices.forEach(function(price) {
-            var option = document.createElement('option');
-            option.value = price.value;
-            option.text = price.label + price.value;
-            priceSelect.appendChild(option);
-          });
+          prices.forEach(price => {
+                        if (price.value) {
+                            const option = document.createElement('option');
+                            option.value = price.value;
+                            option.text = price.label + price.value;
+                            priceSelect.appendChild(option);
+                        }
+                    });
         }
       }
     }
@@ -149,8 +152,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
 <div class="menu">
-  <a href="customer_list.php" style="color:white;">客戶列表</a> |
-  <a href="consume_list.php" style="color:white;">消費列表</a>
+  <a href="../index.php">Home</a> |
+  <a href="customer_add.php" style="color:white;">新增客戶</a> |
+  <a href="product_add.php" style="color:white;">新增產品</a>
 </div>
 <div class="content">
   <h2>新增消費資料</h2>
@@ -173,7 +177,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </td>
       </tr>
       <tr>
-        <td>產品編號：</td>
+        <td>產品名稱：</td>
         <td>
           <select name="product_id" id="product_id" onchange="updatePrice()" required>
             <option value="">選擇產品</option>
