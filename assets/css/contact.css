@@ -1,0 +1,285 @@
+@import url('https://fonts.googleapis.com/earlyaccess/cwtexyen.css');
+@import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Yusei+Magic&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Darumadrop One', 'cwTeXYen';
+}
+
+body {
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f4f4f4;
+}
+
+.header {
+    min-height: 100vh;
+    width: 100%;
+    z-index: 1;
+    position: relative;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 2% 6%;
+    align-items: center;
+}
+
+nav img {
+    width: 100px;
+}
+
+.menu-bar {
+    flex: 1;
+    text-align: right;
+}
+
+
+.menu-bar ul li {
+    list-style: none;
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+    color: #292926;
+}
+
+.menu-bar ul li a {
+    text-decoration: none;
+    color: #292926;
+    font-size: 15px;
+}
+
+.menu-bar ul li::after {
+    content: '';
+    width: 0%;
+    height: 1px;
+    background: #6a4912;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+.menu-bar ul li:hover::after {
+    width: 100%;
+}
+
+.menu-bar .fa-solid {
+    margin-right: 8px;
+    color: 12406a;
+}
+
+.sub-menu1 {
+    display: none;
+    z-index: 1;
+}
+
+.menu-bar ul li:hover .sub-menu1 {
+    display: block;
+    position: absolute;
+    background: #12406a54;
+    margin-top: 10px;
+    margin-left: 15px;
+    z-index: 2;
+}
+
+.menu-bar ul li:hover .sub-menu1 ul {
+    display: block;
+    margin: 10px;
+}
+
+.menu-bar ul li:hover .sub-menu1 ul li {
+    width: 150px;
+    padding: 10px;
+    border-radius: 0;
+    text-align: left;
+}
+
+.menu-bar ul li:hover .sub-menu1 ul li:last-child {
+    border-bottom: none;
+}
+
+.menu-bar ul li:hover .sub-menu1 ul li a:hover {
+    color: #f4f4f4;
+}
+
+nav .fa-solid {
+    display: none;
+}
+
+
+
+div ul .fa-solid {
+    display: inline;
+}
+
+@media(max-width:700px) {
+    .text-box h1 {
+        font-size: 20px;
+    }
+
+    .menu-bar {
+        position: absolute;
+        background: #f4f4f4;
+        height: 100vh;
+        width: 200px;
+        top: 0;
+        right: -200px;
+        text-align: left;
+        z-index: 3;
+        transition: 1s;
+    }
+
+    .menu-bar ul {
+        padding: 30px;
+    }
+
+    .menu-bar ul li {
+        display: block;
+    }
+
+
+
+    nav .fa-solid {
+        display: block;
+        color: #6a4912;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    div .fa-solid {
+        display: block;
+        color: #6a4912;
+        margin: 10px;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    div ul .fa-solid {
+        display: none;
+    }
+
+}
+
+/*-------contact-------*/
+
+
+.contact h2 {
+    font-size: 40px;
+    color: #f7c015;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.contact form {
+    width: 600px;
+    text-align: center;
+    margin: auto;
+}
+
+form .input-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.input-box .input-field {
+    width: 48.5%;
+}
+
+.field .item,
+.field select.item {
+    width: 100%;
+    padding: 18px;
+    background: transparent;
+    border: 2px solid #f7c015;
+    outline: none;
+    border-radius: 6px;
+    font-size: 16px;
+    color: rgba(125, 122, 122, 0.3);
+    ;
+    margin: 10px;
+}
+
+.field select.item {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f7c015' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px) center;
+    padding-right: 35px;
+}
+
+.field select.item option {
+    color: rgba(125, 122, 122, 0.3);
+    ;
+    background: #fff;
+}
+
+.field.error .item {
+    border-color: red;
+}
+
+.field .item::placeholder {
+    color: rgba(125, 122, 122, 0.3);
+}
+
+.field .error-txt {
+    font-size: 14.5px;
+    color: red;
+    text-align: left;
+    margin: -5px 0 10px;
+    display: none;
+}
+
+.field.error .error-txt {
+    display: block;
+}
+
+form .textarea-field .item {
+    resize: none;
+}
+
+form .textarea-field .error-txt {
+    margin-top: -10px;
+}
+
+form button {
+    padding: 12px 32px;
+    background: #f7d05c;
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    font-size: 16px;
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+form button:hover {
+    box-shadow: none;
+}
+
+@media(max-width:700px) {
+    .contact form {
+        width: 300px;
+        text-align: center;
+        margin: auto;
+    }
+
+    form .input-box {
+        display: block;
+    }
+
+    .input-box .input-field {
+        width: 100%;
+    }
+
+}

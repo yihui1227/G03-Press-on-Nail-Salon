@@ -1,0 +1,290 @@
+@import url('https://fonts.googleapis.com/earlyaccess/cwtexyen.css');
+@import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Yusei+Magic&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Darumadrop One', 'cwTeXYen';
+    line-height: 1.6;
+    color: #333;
+}
+
+.header {
+    font-family: 'Darumadrop One', 'cwTeXYen';
+    min-height: 100vh;
+    width: 100%;
+    background-image: url(/assets/img/cover.jpg);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    z-index: 0;
+}
+
+/* 蒙板 */
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+
+/* nav */
+
+nav {
+    display: flex;
+    padding: 0.5% 4%;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+nav img {
+    width: 100px;
+}
+
+.menu-bar {
+    text-align: right;
+}
+
+.menu-bar ul {
+    list-style: none;
+    display: inline-flex;
+}
+
+.menu-bar ul li {
+    padding: 10px 30px;
+    position: relative;
+}
+
+.menu-bar ul li a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.menu-bar ul li i {
+    margin-right: 8px;
+}
+
+.menu-bar ul li:hover {
+    display: block;
+}
+
+.text-box {
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.text-box h1 {
+    font-size: 62px;
+    color: Gold;
+    z-index: 0;
+}
+
+.text-box h2 {
+    margin: 10px 0 40px;
+    font-size: 28px;
+    color: whitesmoke;
+    z-index: 0;
+}
+
+div ul .fa-solid {
+    display: inline;
+}
+
+@media(max-width:700px) {
+    .text-box h1 {
+        font-size: 50px;
+    }
+
+    .text-box h2 {
+        font-size: 40px;
+    }
+
+    .menu-bar {
+        position: absolute;
+        background: #12406a;
+        height: 100vh;
+        width: 200px;
+        top: 0;
+        right: -200px;
+        text-align: left;
+        z-index: 3;
+        transition: 1s;
+    }
+
+    .menu-bar ul {
+        padding: 30px;
+    }
+
+    .menu-bar ul li {
+        display: block;
+    }
+
+
+
+    nav .fa-solid {
+        display: block;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    div .fa-solid {
+        display: block;
+        color: white;
+        margin: 10px;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    div ul .fa-solid {
+        display: none;
+    }
+
+}
+
+/* 服務區塊樣式 */
+.services {
+    font-family: 'Darumadrop One', 'cwTeXYen';
+    padding: 5rem 2rem;
+    background-color: #fdf3a6;
+}
+
+.services-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.services h2 {
+    text-align: center;
+    margin-bottom: 5rem;
+    font-size: 4rem;
+    color: #333;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.service-card i {
+    font-size: 2rem;
+    color: #ff69b4;
+    margin-bottom: 1rem;
+}
+
+/* 作品集樣式 */
+.portfolio {
+    font-family: 'Darumadrop One', 'cwTeXYen';
+    padding: 5rem 1rem;
+}
+
+.portfolio h2 {
+    text-align: center;
+    margin: 2rem;
+}
+
+.portfolio-item img {
+    height: 20%;
+    width: 20%;
+}
+
+.container-slide {
+    display: block;
+}
+
+
+/* 頁腳樣式 */
+footer {
+    font-family: 'Darumadrop One', 'cwTeXYen';
+    background-color: #333;
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.admin-login {
+    font-family: 'Darumadrop One', 'cwTeXYen';
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: #ffca33;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+}
+
+.admin-login:hover {
+    background-color: #ff9333;
+    transform: translateY(-2px);
+}
+
+.fa-bars,
+.fa-circle-xmark {
+    display: none;
+}
+
+.action {
+    font-family: 'Darumadrop One', 'cwTeXYen';
+    margin: 100px auto;
+    width: 80%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.473), rgba(0, 0, 0, 0.473)), url(/assets/img/cover.jpg);
+    background-position: center;
+    background-size: cover;
+    border-radius: 10px;
+    text-align: center;
+    padding: 100px 0;
+    z-index: 5;
+}
+
+.action h1 {
+    color: white;
+    margin-bottom: 40px;
+    padding: 0;
+    font-style: bold;
+}
+
+.hero-btn2 {
+    display: inline-block;
+    text-decoration: none;
+    color: #c1c1c1;
+    border: 1px solid white;
+    padding: 12px 34px;
+    font-size: 13px;
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+}
+
+.hero-btn2:hover {
+    border: 1px solid white;
+    color: black;
+    background: #ffca33;
+    transition: 1s;
+}

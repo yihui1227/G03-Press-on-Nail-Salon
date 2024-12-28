@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Press-on Nail Salon</title>
+    <link rel="stylesheet" href="/assets/css/home.css">
+    </link>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Yusei+Magic&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+</head>
+
+<body>
+    <section class="header">
+        <nav>
+            <a href="home.html"><img src="/assets/img/logo.png" alt="logo"></a>
+            <div class="menu-bar" id="divlinks">
+                <i class="fa-solid fa-circle-xmark" onclick="hideMenu()"></i>
+                <ul>
+                    <li><a href="home.html"><i class="fa-solid fa-house"></i>首頁</a></li>
+                    <li><a href="home.html#services"><i class="fa-solid fa-hand-sparkles"></i>服務項目</li>
+                    <li><a href="home.html#portfolio"><i class="fa-solid fa-images"></i>作品集</a></li>
+                    <li><a href="home.html#price-list"><i class="fa-solid fa-tags"></i>價目表</a></li>
+                    <li><a href="contact.html"><i class="fa-solid fa-envelope"></i>預約諮詢</a></li>
+                </ul>
+            </div>
+            <i class="fa-solid fa-bars" onclick="showMenu()"></i>
+        </nav>
+        <div class="text-box">
+            <h1>Press-on Nail Salon</h1>
+            <h2>專業的美甲服務，為你打造完美指尖</h2>
+        </div>
+    </section>
+
+    <!-- 服務區塊 -->
+    <section class="services" id="services">
+        <div class="services-container">
+            <h2>Services</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <i class="fas fa-paint-brush"></i>
+                    <h3>基礎美甲</h3>
+                    <p>專業修甲、保養及基礎上色服務</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-gem"></i>
+                    <h3>凝膠美甲</h3>
+                    <p>持久亮麗的凝膠指甲，多款造型可選</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-magic"></i>
+                    <h3>手繪設計</h3>
+                    <p>客製化手繪圖案，展現個人風格</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="portfolio">
+        <h2> 精選作品 </h2>
+
+        <div id="container-slide" class="slide" data-bs-ride="carousel">
+            <div class="portfolio-item">
+                <div class="carousel-item active">
+                    <img src="/assets/img/work1.jpg" class="d-block w-100" alt="Image 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="/assets/img/work2.jpg" class="d-block w-100" alt="Image 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="/assets/img/work3.jpg" class="d-block w-100" alt="Image 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+
+    <section class="price-list" id="price-list">
+        <div class="price-container">
+            <h2>服務價目表</h2>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>服務項目</th>
+                        <th>價格</th>
+                        <th>施作時間</th>
+                        <th>備註</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>基礎保養</td>
+                        <td>NT$ 500</td>
+                        <td>60分鐘</td>
+                        <td>包含指緣護理、指甲造型</td>
+                    </tr>
+                    <tr>
+                        <td>基礎上色</td>
+                        <td>NT$ 800</td>
+                        <td>90分鐘</td>
+                        <td>可選擇普通指甲油或光療</td>
+                    </tr>
+                    <tr>
+                        <td>凝膠美甲</td>
+                        <td>NT$ 1,200</td>
+                        <td>120分鐘</td>
+                        <td>附贈基礎保養</td>
+                    </tr>
+                    <tr>
+                        <td>手繪設計</td>
+                        <td>NT$ 1,500起</td>
+                        <td>150分鐘起</td>
+                        <td>價格依複雜度調整</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="action">
+        <h1>Make Perservation</h1>
+        <a href="contact.html" class="hero-btn2">Contact</a>
+    </section>
+
+    <a href="login.html" class="admin-login">管理員入口</a>
+
+    <!-- 頁腳 -->
+    <footer>
+        <p>&copy; 2024 Press-on Nail Salon. All rights reserved.</p>
+    </footer>
+
+    <script>
+        var divlinks = document.getElementById("divlinks");
+        function showMenu() {
+            divlinks.style.right = "0";
+        }
+        function hideMenu() {
+            divlinks.style.right = "-200px";
+        }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

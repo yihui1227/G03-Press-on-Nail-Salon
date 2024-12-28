@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/assets/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <div id="error-message" class="error-message" style="display: none;">帳號或密碼錯誤</div>
+            <form id="loginForm" action="../src/login_process.php" method="POST">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit">login</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 檢查URL參數的函數
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // 當頁面載入完成時執行
+        document.addEventListener('DOMContentLoaded', function () {
+            // 只有當URL中有error參數，且是從login_process.php重定向回來時才顯示錯誤
+            if (getUrlParameter('error') === '1' && document.referrer.includes('login_process.php')) {
+                document.getElementById('error-message').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

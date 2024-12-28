@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=devie-width, initial-scale=1.0">
+    <title>Contact us</title>
+    <link rel="stylesheet" href="/assets/css/contact.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://kit.fontawesome.com/2044b3775e.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <section class="header">
+        <nav>
+            <a href="home.html"><img src="/assets/img/logo.png" alt="logo"></a>
+            <div class="menu-bar" id="divlinks">
+                <i class="fa-solid fa-circle-xmark" onclick="hideMenu()"></i>
+                <ul>
+                    <li><a href="home.html"><i class="fa-solid fa-house"></i>首頁</a></li>
+                    <li><i class="fa-solid fa-hand-sparkles"></i>服務項目
+                        <div class="sub-menu1">
+                            <ul>
+                                <li><a href="#services">基礎護理</a></li>
+                                <li><a href="#services">光療美甲</a></li>
+                                <li><a href="#services">手足護理</a></li>
+                                <li><a href="#services">手部保養</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><a href="#portfolio"><i class="fa-solid fa-images"></i>作品集</a></li>
+                    <li><a href="#price-list"><i class="fa-solid fa-tags"></i>價目表</a></li>
+                    <li><a href="contact.html"><i class="fa-solid fa-envelope"></i>預約諮詢</a></li>
+                </ul>
+            </div>
+            <i class="fa-solid fa-bars" onclick="showMenu()"></i>
+        </nav>
+        <div class="contact">
+            <h2>Make Perservation</h2>
+            <form action="#">
+                <div class="input-box">
+                    <div class="input-field field">
+                        <input type="text" placeholder="Name" id="name" class="item" autocomplete="on">
+                        <div class="error-txt">Full Name can't be blank</div>
+                    </div>
+                    <div class="input-field field">
+                        <input type="text" placeholder="Email Address" id="email" class="item" autocomplete="on">
+                        <div class="error-txt" id="txt">Email Address can't be blank</div>
+                    </div>
+                </div>
+
+                <div class="input-box">
+                    <div class="input-field field">
+                        <input type="text" placeholder="Phone Number" id="phone" class="item" autocomplete="on">
+                        <div class="error-txt">Phone Number can't be blank</div>
+                    </div>
+                    <div class="input-field field">
+                        <select id="subject" class="item">
+                            <option value="" disabled selected>Choose service</option>
+                            <?php include 'src/sel_product.php'; ?>
+                        </select>
+                        <div class="error-txt">Please select a product</div>
+                    </div>
+                </div>
+
+                <div class="textarea-field field">
+                    <textarea id="message" cols="30" rows="10" placeholder="Your Message" class="item"
+                        autocomplete="off"></textarea>
+                    <div class="error-txt">Message can't be blank</div>
+                </div>
+
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script>
+        const form = document.querySelector('form');
+        const fullName = document.getElementById("name");
+        const email = document.getElementById("email");
+        const phone = document.getElementById("phone");
+        const subject = document.getElementById("subject");
+        const mess = document.getElementById("message");
+        function sendemail() {
+            const bodyMessage = `Full Name: ${fullName.value}<br> Email: ${email.value}<br> Phone Number: ${phone.value}<br> Message: ${mess.value}<br>`;
+            Email.send({
+                Host: "smtp.elasticemail.com",
+                Username: "hyforwork1@gmail.com",
+                Password: "4DEF66BDDD39B70036D437154B633E95BCD0",
+                To: 'hyforwork1@gmail.com',
+                From: 'hyforwork1@gmail.com',
+                Subject: "新的預約通知",
+                Body: bodyMessage
+            }).then(
+                message => alert("預約成功！")
+            ).catch(
+                error => alert("發送郵件失敗：" + error)
+            );
+        }
+
+        function checkinput() {
+            const items = document.querySelectorAll(".item");
+            for (const item of items) {
+                if (item.value == "") {
+                    item.classList.add("error");
+                    item.parentElement.classList.add("error");
+                }
+                if (items[1].value != "") {
+                    checkemail();
+                }
+                items[1].addEventListener("keyup", () => {
+                    checkemail();
+                });
+                item.addEventListener("keyup", () => {
+                    if (item.value != "") {
+                        item.classList.remove("error");
+                        item.parentElement.classList.remove("error");
+                    }
+                    else {
+                        item.classList.add("error");
+                        item.parentElement.classList.add("error");
+                    }
+                });
+            }
+        }
+
+        function checkinput() {
+            const items = document.querySelectorAll(".item");
+            let isValid = true;
+            for (const item of items) {
+                if (item.value === "") {
+                    item.classList.add("error");
+                    isValid = false;
+                } else {
+                    item.classList.remove("error");
+                }
+            }
+            if (!email.value.match(/^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,3})(\.[a-z]{2,3})?$/)) {
+                email.classList.add("error");
+                document.getElementById("txt").innerHTML = "請輸入有效的電子郵件地址";
+                isValid = false;
+            } else {
+                email.classList.remove("error");
+                document.getElementById("txt").innerHTML = "";
+            }
+            return isValid;
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (checkinput()) {
+                sendemail();
+            }
+        });
+    </script>
+    <!----------JS for toggle menu-------->
+    <script>
+        var divlinks = document.getElementById("divlinks");
+        function showMenu() {
+            divlinks.style.right = "0";
+        }
+        function hideMenu() {
+            divlinks.style.right = "-200px";
+        }
+
+    </script>
+</body>
+
+</html>
