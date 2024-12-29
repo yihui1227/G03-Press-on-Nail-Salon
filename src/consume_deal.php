@@ -320,7 +320,7 @@ try {
                         <td><?php echo htmlspecialchars($transaction['date']); ?></td>
                         <td><?php echo htmlspecialchars($transaction['product_name']); ?></td>
                         <td><?php echo htmlspecialchars($transaction['amount']); ?></td>
-                        <td><?php echo htmlspecialchars($transaction['payment'] ?? '-'); ?></td>
+                        <td><?php echo htmlspecialchars($transaction['payment']) ?: '-'; ?></td>
                         <td>
                             <a href="?delete_id=<?php echo $transaction['transaction_id']; ?>&csrf_token=<?php echo $_SESSION['csrf_token']; ?>" 
                                onclick="return confirm('確定要刪除此筆資料嗎？')" 
