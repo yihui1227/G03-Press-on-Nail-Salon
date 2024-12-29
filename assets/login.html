@@ -39,9 +39,12 @@
 
         // 當頁面載入完成時執行
         document.addEventListener('DOMContentLoaded', function () {
-            // 只有當URL中有error參數，且是從login_process.php重定向回來時才顯示錯誤
-            if (getUrlParameter('error') === '1' && document.referrer.includes('login_process.php')) {
-                document.getElementById('error-message').style.display = 'block';
+            const errorMessage = document.getElementById('error-message');
+
+            // 如果 URL 包含 error=1
+            if (getUrlParameter('error') === '1') {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = "帳號或密碼錯誤，請再試一次！";
             }
         });
     </script>
