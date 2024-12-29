@@ -1,6 +1,6 @@
 <?php
 // 引入資料庫連接設定
-require_once '../condb.php';
+include('condb.php');
 
 // 從資料庫讀取產品並設定顏色
 function getProductColors($db) {

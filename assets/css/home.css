@@ -36,8 +36,7 @@ body {
     z-index: -1;
 }
 
-/* nav */
-
+/* 導航欄基本樣式 */
 nav {
     display: flex;
     padding: 0.5% 4%;
@@ -51,32 +50,87 @@ nav img {
     width: 100px;
 }
 
-.menu-bar {
+.nav-links {
+    flex: 1;
     text-align: right;
 }
 
-.menu-bar ul {
+.nav-links ul {
     list-style: none;
     display: inline-flex;
+    margin: 0;
+    padding: 0;
 }
 
-.menu-bar ul li {
+.nav-links ul li {
     padding: 10px 30px;
     position: relative;
 }
 
-.menu-bar ul li a {
+.nav-links ul li a {
     color: #333;
     text-decoration: none;
     font-weight: 500;
 }
 
-.menu-bar ul li i {
+.nav-links ul li i {
     margin-right: 8px;
 }
 
-.menu-bar ul li:hover {
-    display: block;
+.nav-links ul li:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 隱藏漢堡選單和關閉按鈕 */
+nav .fa-bars,
+.nav-links .fa-xmark {
+    display: none;
+}
+
+/* 響應式設計 */
+@media(max-width: 700px) {
+    .nav-links ul {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        background: #333;
+        height: 100vh;
+        width: 200px;
+        top: 0;
+        right: -200px;
+        text-align: left;
+        z-index: 999;
+        transition: 0.5s;
+    }
+
+    .nav-links ul li {
+        display: block;
+        margin: 25px;
+    }
+
+    .nav-links ul li a {
+        color: #fff;
+    }
+
+    /* 顯示漢堡選單和關閉按鈕 */
+    nav .fa-bars {
+        display: block;
+        color: #333;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    .nav-links .fa-xmark {
+        display: block;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
 }
 
 .text-box {
@@ -99,6 +153,7 @@ nav img {
     font-size: 28px;
     color: whitesmoke;
     z-index: 0;
+    font-weight: bolder;
 }
 
 div ul .fa-solid {
@@ -111,50 +166,8 @@ div ul .fa-solid {
     }
 
     .text-box h2 {
-        font-size: 40px;
+        font-size: 20px;
     }
-
-    .menu-bar {
-        position: absolute;
-        background: #12406a;
-        height: 100vh;
-        width: 200px;
-        top: 0;
-        right: -200px;
-        text-align: left;
-        z-index: 3;
-        transition: 1s;
-    }
-
-    .menu-bar ul {
-        padding: 30px;
-    }
-
-    .menu-bar ul li {
-        display: block;
-    }
-
-
-
-    nav .fa-solid {
-        display: block;
-        color: white;
-        font-size: 22px;
-        cursor: pointer;
-    }
-
-    div .fa-solid {
-        display: block;
-        color: white;
-        margin: 10px;
-        font-size: 22px;
-        cursor: pointer;
-    }
-
-    div ul .fa-solid {
-        display: none;
-    }
-
 }
 
 /* 服務區塊樣式 */
@@ -172,8 +185,12 @@ div ul .fa-solid {
 .services h2 {
     text-align: center;
     margin-bottom: 5rem;
-    font-size: 4rem;
+    font-size: 3rem;
     color: #333;
+}
+
+.services h3 {
+    font-weight: 600;
 }
 
 .service-grid {
@@ -198,22 +215,42 @@ div ul .fa-solid {
 
 /* 作品集樣式 */
 .portfolio {
-    font-family: 'Darumadrop One', 'cwTeXYen';
-    padding: 5rem 1rem;
+    padding: 50px 0;
+    z-index: 1;
 }
 
 .portfolio h2 {
     text-align: center;
-    margin: 2rem;
+    font-family: 'Darumadrop One', 'cwTeXYen';
+    margin-bottom: 1rem;
+    font-size: 3rem;
+    padding-bottom: 3rem;
 }
 
-.portfolio-item img {
-    height: 20%;
-    width: 20%;
+.portfolio .carousel {
+    max-width: 800px;
+    max-height: 400px;
+    margin: 0 auto;
+    z-index: 10;
 }
 
-.container-slide {
-    display: block;
+.carousel-item img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+@media(max-width: 700px) {
+    .carousel {
+        max-width: 90%;
+    }
+}
+
+.price-list {
+    display: flex;
+    align-items: center;
+    text-align: center;
 }
 
 
@@ -260,7 +297,7 @@ footer {
     border-radius: 10px;
     text-align: center;
     padding: 100px 0;
-    z-index: 5;
+    z-index: 1;
 }
 
 .action h1 {
@@ -280,6 +317,7 @@ footer {
     background: transparent;
     position: relative;
     cursor: pointer;
+    z-index: 1;
 }
 
 .hero-btn2:hover {
