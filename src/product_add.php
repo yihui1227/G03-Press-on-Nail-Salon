@@ -1,6 +1,38 @@
 <?php
 include("../condb.php");
 
+// 首先檢查並創建trigger
+$checkTriggerSQL = "SHOW TRIGGERS LIKE 'calculate_prices_before_insert'";
+$result = $db->query($checkTriggerSQL);
+
+if ($result->rowCount() == 0) {
+    // Trigger 不存在，創建它
+    $createTriggerSQL = "
+        CREATE TRIGGER calculate_prices_before_insert 
+        BEFORE INSERT ON price
+        FOR EACH ROW
+        BEGIN
+            IF NEW.original IS NOT NULL AND NEW.original != '' THEN
+                -- 設定模特價為原價的0.5倍
+                IF NEW.model IS NULL OR NEW.model = '' THEN
+                    SET NEW.model = NEW.original * 0.5;
+                END IF;
+                
+                -- 設定親友價為原價的0.9倍
+                IF NEW.friend IS NULL OR NEW.friend = '' THEN
+                    SET NEW.friend = NEW.original * 0.9;
+                END IF;
+            END IF;
+        END;
+    ";
+    
+    try {
+        $db->exec($createTriggerSQL);
+    } catch (PDOException $e) {
+        error_log("Create trigger failed: " . $e->getMessage());
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'] ?? '';
     $original = $_POST['original'] ?? '';
@@ -97,13 +129,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 resultTable.classList.add("hidden");
             }
         }
+
+        // 價格自動計算功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const originalInput = document.querySelector('input[name="original"]');
+            const modelInput = document.querySelector('input[name="model"]');
+            const friendInput = document.querySelector('input[name="friend"]');
+
+            function calculatePrices() {
+                const originalPrice = parseFloat(originalInput.value) || 0;
+                modelInput.value = (originalPrice * 0.5).toFixed(0);
+                friendInput.value = (originalPrice * 0.9).toFixed(0);
+            }
+
+            // 在輸入過程中即時計算價格
+            originalInput.addEventListener('input', calculatePrices);
+            
+            if (originalInput.value) {
+                calculatePrices();
+            }
+            document.getElementById('productForm').addEventListener('submit', function(e) {
+                const original = parseFloat(originalInput.value);
+                if (!original || original <= 0) {
+                    alert('請輸入有效的原價！');
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
     </script>
 </head>
 <body>
     <div class="menu">
         <a href="../index.php">Home</a> |
         <a href="customer_add.php">新增客戶</a> |
-        <a href="consumer_add.php">新增交易</a>
+        <a href="consume_add.php">新增交易</a>
     </div>
     <div class="content">
         <h2>新增產品</h2>
@@ -122,11 +182,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </tr>
                 <tr>
                     <td>模特價：</td>
-                    <td><input type="text" name="model" required /></td>
+                    <td><input type="text" name="model" readonly /></td>
                 </tr>
                 <tr>
                     <td>親友價：</td>
-                    <td><input type="text" name="friend" required /></td>
+                    <td><input type="text" name="friend" readonly /></td>
                 </tr>
             </table>
             <br />
