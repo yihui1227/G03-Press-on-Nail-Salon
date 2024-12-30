@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../condb.php");
+include('condb.php');
 
 // 顯示訊息的函數
 function showMessage($message, $type = 'success') {
@@ -33,7 +33,7 @@ try {
         if (!hash_equals($_SESSION['csrf_token'], $_GET['csrf_token'])) {
             throw new Exception('CSRF token validation failed');
         }
-
+        
         $delete_id = filter_var($_GET['delete_id'], FILTER_VALIDATE_INT);
         if ($delete_id) {
             $delete_sql = "DELETE FROM price WHERE product_id = ?";
@@ -53,6 +53,7 @@ try {
         if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
             throw new Exception('CSRF token validation failed');
         }
+        
 
         $id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
         $name = filter_var($_POST['name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -60,10 +61,10 @@ try {
         $model = filter_var($_POST['model'], FILTER_VALIDATE_INT);
         $friend = filter_var($_POST['friend'], FILTER_VALIDATE_INT);
 
-        // 若欄位為空，則設為NULL
-        $original = $original !== false ? $original : null;
-        $model = $model !== false ? $model : null;
-        $friend = $friend !== false ? $friend : null;
+        if ($original < 0 || $model<0 || $friend<0) {
+            // 返回錯誤，避免處理負值價格
+            die("Error: Price cannot be negative.");
+        }
 
         if ($id && $name) {
             $update_sql = "UPDATE price SET name = ?, original = ?, model = ?, friend = ? WHERE product_id = ?";
@@ -89,7 +90,7 @@ try {
     $sql = "SELECT * FROM price $searchCondition ORDER BY product_id DESC LIMIT ? OFFSET ?";
     $stmt = $db->prepare($sql);
     $stmt->execute(array_merge($searchParams, [$perPage, $offset]));
-    $prices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (Exception $e) {
     showMessage("系統錯誤：" . $e->getMessage(), "error");
@@ -101,252 +102,210 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>產品資料管理系統</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .search-box {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        .search-box input[type="text"] {
-            width: 300px;
-            padding: 8px;
-            margin-right: 10px;
-        }
-        .search-box button {
-            padding: 8px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .pagination {
-            margin: 20px 0;
-            text-align: center;
-        }
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
-            margin: 0 4px;
-            border-radius: 4px;
-        }
-        .pagination a.active {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            border-radius: 3px;
-            color: white;
-            margin: 0 5px;
-        }
-        .btn-delete {
-            background-color: #ff4444;
-        }
-        .btn-edit {
-            background-color: #33b5e5;
-        }
-        .message {
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-        .message.success {
-            background-color: #dff0d8;
-            color: #3c763d;
-            border: 1px solid #d6e9c6;
-        }
-        .message.error {
-            background-color: #f2dede;
-            color: #a94442;
-            border: 1px solid #ebccd1;
-        }
-        .edit-form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            margin-top: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .form-submit {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .form-submit:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>編輯產品</title>
+    <link rel="stylesheet" href="/assets/css/sub.css">
+    <link rel="stylesheet" href="/assets/css/admin_nav.css">
+    <link rel="stylesheet" href="/assets/css/edit.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>產品資料管理系統</h1>
-    
-    <?php if (isset($_SESSION['message'])): ?>
-        <div class="message <?php echo $_SESSION['message_type']; ?>">
-            <?php 
-            echo $_SESSION['message'];
-            unset($_SESSION['message']);
-            unset($_SESSION['message_type']);
-            ?>
+    <div class="top-nav">
+        <div class="nav-links">
+            <a href="dashboard.php" class="menu-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+            <a href="consume_list.php" class="menu-item"><i class="fa-solid fa-receipt"></i> 消費管理</a>
+            <a href="customer_list.php" class="menu-item"><i class="fa-solid fa-user-tag"></i> 客戶管理</a>
+            <a href="product_list.php" class="menu-item"><i class="fa-solid fa-hand-sparkles"></i> 產品管理</a>
         </div>
-    <?php endif; ?>
-
-    <div class="search-box">
-        <form method="get" action="">
-            <input type="text" name="search" placeholder="搜尋產品名稱..." 
-                   value="<?php echo htmlspecialchars($search); ?>">
-            <button type="submit">搜尋</button>
-        </form>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>產品名稱</th>
-                <th>原價</th>
-                <th>模特價</th>
-                <th>親友價</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($prices)): ?>
-                <tr>
-                    <td colspan="5" style="text-align: center;">沒有找到符合的資料</td>
-                </tr>
-            <?php else: ?>
-                <?php foreach ($prices as $price): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($price['name']); ?></td>
-                        <td><?php echo htmlspecialchars($price['original'] ?? '-'); ?></td>
-                        <td><?php echo htmlspecialchars($price['model'] ?? '-'); ?></td>
-                        <td><?php echo htmlspecialchars($price['friend'] ?? '-'); ?></td>
-                        <td>
-                            <a href="?delete_id=<?php echo $price['product_id']; ?>&csrf_token=<?php echo $_SESSION['csrf_token']; ?>" 
-                               onclick="return confirm('確定要刪除此筆資料嗎？')" 
-                               class="btn btn-delete">刪除</a>
-                            <a href="?edit_id=<?php echo $price['product_id']; ?>" 
-                               class="btn btn-edit">修改</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-    </table>
-
-    <div class="pagination">
-        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>" 
-               class="<?php echo ($page == $i) ? 'active' : ''; ?>">
-                <?php echo $i; ?>
-            </a>
-        <?php endfor; ?>
-    </div>
-
-    <?php if (isset($_GET['edit_id'])): ?>
-        <?php 
-        $edit_id = filter_var($_GET['edit_id'], FILTER_VALIDATE_INT);
-        $edit_sql = "SELECT * FROM price WHERE product_id = ?";
-        $edit_stmt = $db->prepare($edit_sql);
-        $edit_stmt->execute([$edit_id]);
-        $edit_price = $edit_stmt->fetch(PDO::FETCH_ASSOC);
+    <div class="container">
+        <h1><i class="fas fa-edit"></i> 編輯產品</h1>
         
-        if ($edit_price):
-        ?>
-            <div class="edit-form">
-                <h2>修改產品資料</h2>
-                <form method="post" action="">
-                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <input type="hidden" name="id" value="<?php echo $edit_price['product_id']; ?>">
-                    
-                    <div class="form-group">
-                        <label for="name">產品名稱：</label>
-                        <input type="text" name="name" id="name" 
-                               value="<?php echo htmlspecialchars($edit_price['name']); ?>" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="original">原價：</label>
-                        <input type="number" name="original" id="original" 
-                               value="<?php echo htmlspecialchars($edit_price['original'] ?? ''); ?>" 
-                               placeholder="可留空">
-                    </div>
+        <a href="product_list.php" class="back-btn">
+            <i class="fas fa-arrow-left"></i> 返回列表
+        </a>
 
-                    <div class="form-group">
-                        <label for="model">模特價：</label>
-                        <input type="number" name="model" id="model" 
-                               value="<?php echo htmlspecialchars($edit_price['model'] ?? ''); ?>" 
-                               placeholder="可留空">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="friend">親友價：</label>
-                        <input type="number" name="friend" id="friend" 
-                               value="<?php echo htmlspecialchars($edit_price['friend'] ?? ''); ?>" 
-                               placeholder="可留空">
-                    </div>
-                    
-                    <input type="submit" value="更新資料" class="form-submit">
-                </form>
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="message <?php echo $_SESSION['message_type']; ?>">
+                <?php 
+                echo $_SESSION['message'];
+                unset($_SESSION['message']);
+                unset($_SESSION['message_type']);
+                ?>
             </div>
         <?php endif; ?>
-    <?php endif; ?>
+
+        <div class="search-box">
+            <form method="get" action="">
+                <input type="text" name="search" placeholder="搜尋產品名稱..." 
+                    value="<?php echo htmlspecialchars($search); ?>">
+                <button type="submit" class="btn btn-search">
+                    <i class="fas fa-search"></i> 搜尋
+                </button>
+            </form>
+        </div>
+
+        <table id="productTable">
+            <thead>
+                <tr>
+                    <th>產品編號</th>
+                    <th>產品名稱</th>
+                    <th>原價</th>
+                    <th>模特價</th>
+                    <th>親友價</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($products)): ?>
+                    <tr>
+                        <td colspan="6" style="text-align: center;">沒有找到符合的資料</td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($products as $product): ?>
+                        <tr id="row-<?php echo $product['product_id']; ?>" data-id="<?php echo $product['product_id']; ?>">
+                            <td><?php echo htmlspecialchars($product['product_id']); ?></td>
+                            <td data-field="name"><?php echo htmlspecialchars($product['name']); ?></td>
+                            <td data-field="original"><?php echo htmlspecialchars($product['original'] ?? '-'); ?></td>
+                            <td data-field="model"><?php echo htmlspecialchars($product['model'] ?? '-'); ?></td>
+                            <td data-field="friend"><?php echo htmlspecialchars($product['friend'] ?? '-'); ?></td>
+                            <td>
+                                <i class="fas fa-trash icon-btn delete-btn" 
+                                   onclick="deleteProduct(<?php echo $product['product_id']; ?>)"></i>
+                                <i class="fas fa-edit icon-btn edit-btn" 
+                                   onclick="startEdit(<?php echo $product['product_id']; ?>)"></i>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>" 
+                   class="<?php echo ($page == $i) ? 'active' : ''; ?>">
+                    <?php echo $i; ?>
+                </a>
+            <?php endfor; ?>
+        </div>
+    </div>
+
+    <script>
+        let currentEditingId = null;
+
+        function startEdit(id) {
+            if (currentEditingId && currentEditingId !== id) {
+                if (confirm('有未儲存的修改，是否要儲存？')) {
+                    saveEdit(currentEditingId);
+                } else {
+                    cancelEdit(currentEditingId);
+                }
+            }
+
+            const row = document.getElementById(`row-${id}`);
+            currentEditingId = id;
+            row.classList.add('edit-mode');
+
+            // 產品名稱
+            const nameCell = row.cells[1];
+            const currentName = nameCell.textContent;
+            nameCell.innerHTML = `<input type="text" value="${currentName}" required>`;
+
+            // 原價
+            const originalCell = row.cells[2];
+            const currentOriginal = originalCell.textContent !== '-' ? originalCell.textContent : '';
+            originalCell.innerHTML = `<input type="number" value="${currentOriginal}">`;
+
+            // 模特價
+            const modelCell = row.cells[3];
+            const currentModel = modelCell.textContent !== '-' ? modelCell.textContent : '';
+            modelCell.innerHTML = `<input type="number" value="${currentModel}">`;
+
+            // 親友價
+            const friendCell = row.cells[4];
+            const currentFriend = friendCell.textContent !== '-' ? friendCell.textContent : '';
+            friendCell.innerHTML = `<input type="number" value="${currentFriend}">`;
+
+            // 更改按鈕
+            const actionCell = row.cells[5];
+            actionCell.innerHTML = `
+                <i class="fas fa-check icon-btn save-btn" onclick="confirmSave(${id})"></i>
+                <i class="fas fa-times icon-btn cancel-btn" onclick="cancelEdit(${id})"></i>
+                <i class="fas fa-trash icon-btn delete-btn" onclick="deleteProduct(${id})"></i>
+            `;
+        }
+
+        function confirmSave(id) {
+            if (confirm('確定要儲存修改嗎？')) {
+                saveEdit(id);
+            }
+        }
+
+        function saveEdit(id) {
+            const row = document.getElementById(`row-${id}`);
+            const formData = new FormData();
+            
+            formData.append('id', id);
+            formData.append('csrf_token', '<?php echo $_SESSION['csrf_token']; ?>');
+            formData.append('name', row.cells[1].querySelector('input').value);
+            formData.append('original', row.cells[2].querySelector('input').value || null);
+            formData.append('model', row.cells[3].querySelector('input').value || null);
+            formData.append('friend', row.cells[4].querySelector('input').value || null);
+
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(() => {
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('儲存失敗，請稍後再試。');
+            });
+        }
+
+        function cancelEdit(id) {
+            window.location.reload();
+        }
+
+        function deleteProduct(id) {
+            if (currentEditingId && currentEditingId !== id) {
+                if (confirm('有未儲存的修改，是否要儲存？')) {
+                    saveEdit(currentEditingId);
+                    return;
+                }
+                cancelEdit(currentEditingId);
+            }
+            
+            if (confirm('確定要刪除此筆資料嗎？')) {
+                window.location.href = `?delete_id=${id}&csrf_token=<?php echo $_SESSION['csrf_token']; ?>`;
+            }
+        }
+
+        // 攔截所有可能導致離開編輯狀態的操作
+        window.addEventListener('beforeunload', function(e) {
+            if (currentEditingId) {
+                e.preventDefault();
+                e.returnValue = '有未儲存的修改，確定要離開嗎？';
+            }
+        });
+
+        // 攔截分頁和搜尋操作
+        document.querySelectorAll('.pagination a, .search-box form').forEach(element => {
+            element.addEventListener('click', function(e) {
+                if (currentEditingId) {
+                    if (confirm('有未儲存的修改，是否要儲存？')) {
+                        e.preventDefault();
+                        saveEdit(currentEditingId);
+                    } else {
+                        cancelEdit(currentEditingId);
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

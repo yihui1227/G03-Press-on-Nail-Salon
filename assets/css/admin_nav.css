@@ -1,0 +1,77 @@
+:root {
+    --primary-color: #f3cf6d;
+    --secondary-color: #ffeac0;
+    --accent-color: #f1a643;
+    --background: #fbece3;
+    --card-bg: #FFFFFF;
+    --text-color: #4A4A4A;
+}
+
+/* 統一導覽列樣式 */
+.top-nav {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    display: flex;
+    align-items: left;
+    justify-content: space-between;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.menu-section .menu-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-section .menu-item:hover {
+    background: var(--primary-color);
+    color: white;
+    padding-left: 25px;
+}
+
+.menu-section .submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.menu-section .menu-item.active+.submenu {
+    max-height: 200px;
+}
+
+.menu-section .submenu a {
+    padding-left: 40px;
+    font-size: 0.9em;
+}
+
+/* 響應式選單按鈕 */
+.menu-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: none;
+}

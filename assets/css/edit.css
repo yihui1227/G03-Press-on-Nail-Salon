@@ -1,0 +1,30 @@
+.edit-mode td {
+    padding: 5px;
+}
+
+.edit-mode select,
+.edit-mode input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.icon-btn {
+    cursor: pointer;
+    margin: 0 5px;
+    color: #666;
+}
+
+.save-btn:hover {
+    color: #4CAF50;
+}
+
+.cancel-btn:hover,
+.edit-btn:hover {
+    color: #2196F3;
+}
+
+.delete-btn:hover {
+    color: rgb(243, 33, 33);
+}

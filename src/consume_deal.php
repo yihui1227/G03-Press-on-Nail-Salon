@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../condb.php");
+include('condb.php');
 
 // 顯示訊息的函數
 function showMessage($message, $type = 'success') {
@@ -129,369 +129,356 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>交易資料管理</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .search-box {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        .search-box input[type="text"] {
-            width: 300px;
-            padding: 8px;
-            margin-right: 10px;
-        }
-        .search-box button {
-            padding: 8px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .pagination {
-            margin: 20px 0;
-            text-align: center;
-        }
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
-            margin: 0 4px;
-            border-radius: 4px;
-        }
-        .pagination a.active {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            border-radius: 3px;
-            color: white;
-            margin: 0 5px;
-        }
-        .btn-delete {
-            background-color: #ff4444;
-        }
-        .btn-edit {
-            background-color: #33b5e5;
-        }
-        .message {
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-        .message.success {
-            background-color: #dff0d8;
-            color: #3c763d;
-            border: 1px solid #d6e9c6;
-        }
-        .message.error {
-            background-color: #f2dede;
-            color: #a94442;
-            border: 1px solid #ebccd1;
-        }
-        .edit-form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            margin-top: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .form-submit {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .form-submit:hover {
-            background-color: #45a049;
-        }
-        .export-btn {
-            float: right;
-            margin-bottom: 10px;
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px 15px;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-    </style>
+    <title>編輯消費</title>
+    <link rel="stylesheet" href="/assets/css/sub.css">
+    <link rel="stylesheet" href="/assets/css/admin_nav.css">
+    <link rel="stylesheet" href="/assets/css/edit.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>交易資料管理系統</h1>
-    
-    <?php if (isset($_SESSION['message'])): ?>
-        <div class="message <?php echo $_SESSION['message_type']; ?>">
-            <?php 
-            echo $_SESSION['message'];
-            unset($_SESSION['message']);
-            unset($_SESSION['message_type']);
-            ?>
+    <div class="top-nav">
+        <div class="nav-links">
+            <a href="dashboard.php" class="menu-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+            <a href="consume_list.php" class="menu-item"><i class="fa-solid fa-receipt"></i> 消費管理</a>
+            <a href="customer_list.php" class="menu-item"><i class="fa-solid fa-user-tag"></i> 客戶管理</a>
+            <a href="product_list.php" class="menu-item"><i class="fa-solid fa-hand-sparkles"></i> 產品管理</a>
         </div>
-    <?php endif; ?>
-
-    <div class="search-box">
-        <form method="get" action="">
-            <input type="text" name="search" placeholder="搜尋客戶名稱、產品名稱或狀態..." 
-                   value="<?php echo htmlspecialchars($search); ?>">
-            <button type="submit">搜尋</button>
-        </form>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>交易編號</th>
-                <th>客戶名稱</th>
-                <th>狀態</th>
-                <th>日期</th>
-                <th>產品名稱</th>
-                <th>價格</th>
-                <th>付款方式</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($transactions)): ?>
-                <tr>
-                    <td colspan="7" style="text-align: center;">沒有找到符合的資料</td>
-                </tr>
-            <?php else: ?>
-                <?php foreach ($transactions as $transaction): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($transaction['transaction_id']); ?></td>
-                        <td><?php echo htmlspecialchars($transaction['customer_name']); ?></td>
-                        <td><?php echo htmlspecialchars($transaction['state']); ?></td>
-                        <td><?php echo htmlspecialchars($transaction['date']); ?></td>
-                        <td><?php echo htmlspecialchars($transaction['product_name']); ?></td>
-                        <td><?php echo htmlspecialchars($transaction['amount']); ?></td>
-                        <td><?php echo htmlspecialchars($transaction['payment']) ?: '-'; ?></td>
-                        <td>
-                            <a href="?delete_id=<?php echo $transaction['transaction_id']; ?>&csrf_token=<?php echo $_SESSION['csrf_token']; ?>" 
-                               onclick="return confirm('確定要刪除此筆資料嗎？')" 
-                               class="btn btn-delete">刪除</a>
-                            <a href="?edit_id=<?php echo $transaction['transaction_id']; ?>" 
-                               class="btn btn-edit">修改</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-    </table>
+    <div class="container">
+        <h1><i class="fas fa-edit"></i> 編輯消費</h1>
+        
+        <a href="consume_list.php" class="back-btn">
+            <i class="fas fa-arrow-left"></i> 返回列表
+        </a>
 
-    <div class="pagination">
-        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>" 
-               class="<?php echo ($page == $i) ? 'active' : ''; ?>">
-                <?php echo $i; ?>
-            </a>
-        <?php endfor; ?>
-    </div>
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="message <?php echo $_SESSION['message_type']; ?>">
+                <?php 
+                echo $_SESSION['message'];
+                unset($_SESSION['message']);
+                unset($_SESSION['message_type']);
+                ?>
+            </div>
+        <?php endif; ?>
 
-    <?php if (isset($_GET['edit_id']) && $edit_transaction): ?>
-        <div class="edit-form">
-            <h2>修改交易資料</h2>
-            <form method="post" action="">
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <input type="hidden" name="id" value="<?php echo $edit_transaction['transaction_id']; ?>">
-                
-                <div class="form-group">
-                    <label>交易編號：</label>
-                    <input type="text" value="<?php echo htmlspecialchars($edit_transaction['transaction_id']); ?>" readonly 
-                    class="form-control" style="background-color: #f0f0f0;">
-                </div>
-
-                <div class="form-group">
-                    <label for="customer_id">客戶：</label>
-                    <select name="customer_id" id="customer_id" required>
-                        <?php foreach ($customers as $customer): ?>
-                            <option value="<?php echo $customer['customer_id']; ?>"
-                                <?php echo ($customer['customer_id'] == $edit_transaction['customer_id']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($customer['name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="state">狀態：</label>
-                    <select name="state" id="state" required onchange="togglePaymentField()">
-                        <option value="已付" <?php echo ($edit_transaction['state'] == '已付') ? 'selected' : ''; ?>>已付</option>
-                        <option value="未付" <?php echo ($edit_transaction['state'] == '未付') ? 'selected' : ''; ?>>未付</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="date">日期：</label>
-                    <input type="date" name="date" id="date" 
-                           value="<?php echo htmlspecialchars($edit_transaction['date']); ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="product_id">產品：</label>
-                    <select name="product_id" id="product_id" required onchange="updateAmount()">
-                        <?php foreach ($products as $product): ?>
-                            <option value="<?php echo $product['product_id']; ?>"
-                                <?php echo ($product['product_id'] == $edit_transaction['product_id']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($product['name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="amount">價格：</label>
-                    <select name="amount" id="amount" required>
-                    <option value="">選擇價格</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="payment_group">
-                    <label for="payment">付款方式：</label>
-                    <select name="payment" id="payment">
-                        <option value="">請選擇付款方式</option>
-                        <option value="現金" <?php echo ($edit_transaction['payment'] == '現金') ? 'selected' : ''; ?>>現金</option>
-                        <option value="信用卡" <?php echo ($edit_transaction['payment'] == '信用卡') ? 'selected' : ''; ?>>信用卡</option>
-                        <option value="LINE PAY" <?php echo ($edit_transaction['payment'] == 'LINE PAY') ? 'selected' : ''; ?>>LINE PAY</option>  
-                        <option value="APPLE PAY" <?php echo ($edit_transaction['payment'] == 'APPLE PAY') ? 'selected' : ''; ?>>APPLE PAY</option>
-                    </select>
-                </div>
-                
-                <input type="submit" value="更新資料" class="form-submit">
+        <div class="search-box">
+            <form method="get" action="">
+                <input type="text" name="search" placeholder="搜尋客戶名稱、產品名稱或狀態..." 
+                    value="<?php echo htmlspecialchars($search); ?>">
+                <button type="submit" class="btn btn-search">
+                    <i class="fas fa-search"></i> 搜尋
+                </button>
             </form>
         </div>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // 初始化表單
-                if (document.getElementById('product_id')) {
-                    updatePrice();
-                    togglePaymentField();
+        <table id="transactionTable">
+            <thead>
+                <tr>
+                    <th>交易編號</th>
+                    <th>客戶名稱</th>
+                    <th>狀態</th>
+                    <th>日期</th>
+                    <th>產品名稱</th>
+                    <th>價格</th>
+                    <th>付款方式</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($transactions)): ?>
+                    <tr>
+                        <td colspan="8" style="text-align: center;">沒有找到符合的資料</td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($transactions as $transaction): ?>
+                        <tr id="row-<?php echo $transaction['transaction_id']; ?>" data-id="<?php echo $transaction['transaction_id']; ?>">
+                            <td><?php echo htmlspecialchars($transaction['transaction_id']); ?></td>
+                            <td data-field="customer_id"><?php echo htmlspecialchars($transaction['customer_name']); ?></td>
+                            <td data-field="state"><?php echo htmlspecialchars($transaction['state']); ?></td>
+                            <td data-field="date"><?php echo htmlspecialchars($transaction['date']); ?></td>
+                            <td data-field="product_id"><?php echo htmlspecialchars($transaction['product_name']); ?></td>
+                            <td data-field="amount"><?php echo htmlspecialchars($transaction['amount']); ?></td>
+                            <td data-field="payment"><?php echo htmlspecialchars($transaction['payment']) ?: '-'; ?></td>
+                            <td>
+                                <i class="fas fa-trash icon-btn delete-btn" 
+                                onclick="deleteTransaction(<?php echo $transaction['transaction_id']; ?>)"></i>
+                                <i class="fas fa-edit icon-btn edit-btn" 
+                                onclick="startEdit(<?php echo $transaction['transaction_id']; ?>)"></i>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+                    <!--頁數-->
+        <div class="pagination">
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>" 
+                class="<?php echo ($page == $i) ? 'active' : ''; ?>">
+                    <?php echo $i; ?>
+                </a>
+            <?php endfor; ?>
+        </div>
+    </div>
+
+    
+
+    <script>
+        // 儲存所有客戶和產品資料
+        const customers = <?php echo json_encode($customers); ?>;
+        const products = <?php echo json_encode($products); ?>;
+        let currentEditingId = null;
+
+        function startEdit(id) {
+            if (currentEditingId && currentEditingId !== id) {
+                if (confirm('有未儲存的修改，是否要儲存？')) {
+                    saveEdit(currentEditingId);
+                } else {
+                    cancelEdit(currentEditingId);
                 }
-                
-                // 綁定事件監聽器
-                const productSelect = document.getElementById('product_id');
-                const stateSelect = document.querySelector('select[name="state"]');
-                
-                if (productSelect) {
-                    productSelect.addEventListener('change', updatePrice);
-                }
-                
-                if (stateSelect) {
-                    stateSelect.addEventListener('change', togglePaymentField);
-                }
+            }
+
+            const row = document.getElementById(`row-${id}`);
+            currentEditingId = id;
+            row.classList.add('edit-mode');
+
+            // 替換每個可編輯欄位為輸入元素
+            const cells = row.cells;
+            
+            // 客戶名稱下拉選單
+            const customerCell = cells[1];
+            const currentCustomerId = customerCell.getAttribute('data-customer-id');
+            customerCell.innerHTML = createCustomerSelect(currentCustomerId);
+
+            // 狀態下拉選單
+            const stateCell = cells[2];
+            const currentState = stateCell.textContent;
+            stateCell.innerHTML = createStateSelect(currentState);
+
+            // 日期輸入
+            const dateCell = cells[3];
+            const currentDate = dateCell.textContent;
+            dateCell.innerHTML = `<input type="date" value="${currentDate}">`;
+
+            // 產品名稱下拉選單
+            const productCell = cells[4];
+            const currentProductId = productCell.getAttribute('data-product-id');
+            productCell.innerHTML = createProductSelect(currentProductId);
+
+            // 價格下拉選單
+            const amountCell = cells[5];
+            const currentAmount = amountCell.textContent;
+            amountCell.innerHTML = createAmountSelect(currentProductId, currentAmount);
+
+            // 付款方式下拉選單
+            const paymentCell = cells[6];
+            const currentPayment = paymentCell.textContent;
+            paymentCell.innerHTML = createPaymentSelect(currentPayment);
+
+            // 更改按鈕
+            const actionCell = cells[7];
+            actionCell.innerHTML = `
+                <i class="fas fa-check icon-btn save-btn" onclick="confirmSave(${id})"></i>
+                <i class="fas fa-times icon-btn cancel-btn" onclick="cancelEdit(${id})"></i>
+                <i class="fas fa-trash icon-btn delete-btn" onclick="deleteTransaction(${id})"></i>
+            `;
+
+            // 綁定狀態變更事件
+            const stateSelect = row.querySelector('select[name="state"]');
+            stateSelect.addEventListener('change', function() {
+                togglePaymentField(row);
             });
 
-            function updatePrice() {
-                try {
-                    const productId = document.getElementById('product_id').value;
-                    const priceSelect = document.getElementById('amount');
-                    const products = <?php echo json_encode($products ?? []); ?>;
-                    
-                    priceSelect.innerHTML = '<option value="">選擇價格</option>';
-                    
-                    if (!productId) return;
-                    
-                    const selectedProduct = products.find(product => product.product_id == productId);
-                    if (!selectedProduct) return;
-                    
-                    const prices = [
-                        { label: '原價 NT$', value: selectedProduct.original },
-                        { label: '模特價 NT$', value: selectedProduct.model },
-                        { label: '親友價 NT$', value: selectedProduct.friend }
-                    ];
-                    
-                    prices.forEach(price => {
-                        if (price.value) {
-                            const option = document.createElement('option');
-                            option.value = price.value;
-                            option.text = price.label + price.value;
-                            priceSelect.appendChild(option);
-                        }
-                    });
-                } catch (error) {
-                    console.error('更新價格時發生錯誤:', error);
+            // 綁定產品變更事件
+            const productSelect = row.querySelector('select[name="product_id"]');
+            productSelect.addEventListener('change', function() {
+                updatePriceOptions(row);
+            });
+        }
+
+        function confirmSave(id) {
+            if (confirm('確定要儲存修改嗎？')) {
+                saveEdit(id);
+            }
+        }
+
+        function saveEdit(id) {
+            const row = document.getElementById(`row-${id}`);
+            const formData = new FormData();
+            
+            formData.append('id', id);
+            formData.append('csrf_token', '<?php echo $_SESSION['csrf_token']; ?>');
+            formData.append('customer_id', row.querySelector('select[name="customer_id"]').value);
+            formData.append('state', row.querySelector('select[name="state"]').value);
+            formData.append('date', row.querySelector('input[type="date"]').value);
+            formData.append('product_id', row.querySelector('select[name="product_id"]').value);
+            formData.append('amount', row.querySelector('select[name="amount"]').value);
+            formData.append('payment', row.querySelector('select[name="payment"]').value);
+
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(() => {
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('儲存失敗，請稍後再試。');
+            });
+        }
+
+        function cancelEdit(id) {
+            const row = document.getElementById(`row-${id}`);
+            window.location.reload();
+        }
+
+        function deleteTransaction(id) {
+            if (currentEditingId && currentEditingId !== id) {
+                if (confirm('有未儲存的修改，是否要儲存？')) {
+                    saveEdit(currentEditingId);
+                    return;
+                }
+                cancelEdit(currentEditingId);
+            }
+            
+            if (confirm('確定要刪除此筆資料嗎？')) {
+                window.location.href = `?delete_id=${id}&csrf_token=<?php echo $_SESSION['csrf_token']; ?>`;
+            }
+        }
+
+        function createCustomerSelect(currentId) {
+            let html = '<select name="customer_id" required>';
+            customers.forEach(customer => {
+                html += `<option value="${customer.customer_id}" 
+                        ${customer.customer_id == currentId ? 'selected' : ''}>
+                        ${customer.name}</option>`;
+            });
+            html += '</select>';
+            return html;
+        }
+
+        function createStateSelect(currentState) {
+            return `
+                <select name="state" required>
+                    <option value="已付" ${currentState === '已付' ? 'selected' : ''}>已付</option>
+                    <option value="未付" ${currentState === '未付' ? 'selected' : ''}>未付</option>
+                </select>
+            `;
+        }
+
+        function createProductSelect(currentId) {
+            let html = '<select name="product_id" required>';
+            products.forEach(product => {
+                html += `<option value="${product.product_id}" 
+                        ${product.product_id == currentId ? 'selected' : ''}>
+                        ${product.name}</option>`;
+            });
+            html += '</select>';
+            return html;
+        }
+
+        function createAmountSelect(productId, currentAmount) {
+            let html = '<select name="amount" required>';
+            const product = products.find(p => p.product_id == productId);
+            
+            if (product) {
+                if (product.original) {
+                    html += `<option value="${product.original}" 
+                            ${product.original == currentAmount ? 'selected' : ''}>
+                            原價 NT$${product.original}</option>`;
+                }
+                if (product.model) {
+                    html += `<option value="${product.model}" 
+                            ${product.model == currentAmount ? 'selected' : ''}>
+                            模特價 NT$${product.model}</option>`;
+                }
+                if (product.friend) {
+                    html += `<option value="${product.friend}" 
+                            ${product.friend == currentAmount ? 'selected' : ''}>
+                            親友價 NT$${product.friend}</option>`;
                 }
             }
+            
+            html += '</select>';
+            return html;
+        }
 
-            function togglePaymentField() {
-                try {
-                    const state = document.querySelector('select[name="state"]').value;
-                    const paymentGroup = document.getElementById('payment_group');
-                    const paymentSelect = document.querySelector('select[name="payment"]');
-                    
-                    if (!paymentGroup || !paymentSelect) return;
-                    
-                    if (state === '已付') {
-                        paymentGroup.style.display = 'block';
-                        paymentSelect.required = true;
+        function createPaymentSelect(currentPayment) {
+            return `
+                <select name="payment">
+                    <option value="" ${!currentPayment ? 'selected' : ''}>請選擇付款方式</option>
+                    <option value="現金" ${currentPayment === '現金' ? 'selected' : ''}>現金</option>
+                    <option value="信用卡" ${currentPayment === '信用卡' ? 'selected' : ''}>信用卡</option>
+                    <option value="LINE PAY" ${currentPayment === 'LINE PAY' ? 'selected' : ''}>LINE PAY</option>
+                    <option value="APPLE PAY" ${currentPayment === 'APPLE PAY' ? 'selected' : ''}>APPLE PAY</option>
+                </select>
+            `;
+        }
+
+        function togglePaymentField(row) {
+            const state = row.querySelector('select[name="state"]').value;
+            const paymentSelect = row.querySelector('select[name="payment"]');
+            
+            if (state === '已付') {
+                paymentSelect.style.display = 'block';
+                paymentSelect.required = true;
+            } else {
+                paymentSelect.style.display = 'none';
+                paymentSelect.required = false;
+                paymentSelect.value = '';
+            }
+        }
+
+        function updatePriceOptions(row) {
+            const productId = row.querySelector('select[name="product_id"]').value;
+            const amountCell = row.querySelector('td[data-field="amount"]');
+            amountCell.innerHTML = createAmountSelect(productId, '');
+        }
+
+        // 在頁面載入時為所有行添加必要的數據屬性
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('#transactionTable tbody tr');
+            rows.forEach(row => {
+                const customerName = row.cells[1].textContent;
+                const productName = row.cells[4].textContent;
+                
+                const customer = customers.find(c => c.name === customerName.trim());
+                const product = products.find(p => p.name === productName.trim());
+                
+                if (customer) {
+                    row.cells[1].setAttribute('data-customer-id', customer.customer_id);
+                }
+                if (product) {
+                    row.cells[4].setAttribute('data-product-id', product.product_id);
+                }
+            });
+        });
+
+        // 攔截所有可能導致離開編輯狀態的操作
+        window.addEventListener('beforeunload', function(e) {
+            if (currentEditingId) {
+                e.preventDefault();
+                e.returnValue = '有未儲存的修改，確定要離開嗎？';
+            }
+        });
+
+        // 攔截分頁和搜尋操作
+        document.querySelectorAll('.pagination a, .search-box form').forEach(element => {
+            element.addEventListener('click', function(e) {
+                if (currentEditingId) {
+                    if (confirm('有未儲存的修改，是否要儲存？')) {
+                        e.preventDefault();
+                        saveEdit(currentEditingId);
                     } else {
-                        paymentGroup.style.display = 'none';
-                        paymentSelect.required = false;
-                        paymentSelect.value = '';
+                        cancelEdit(currentEditingId);
                     }
-                } catch (error) {
-                    console.error('切換付款欄位時發生錯誤:', error);
                 }
-            }
-        </script>
-
-    <?php endif; ?>
-
-</body>
+            });
+        });
+    </script>
+    </body>
 </html>

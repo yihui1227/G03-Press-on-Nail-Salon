@@ -1,5 +1,7 @@
 <?php
-include("../condb.php");
+include('condb.php');
+
+$message = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'] ?? '';
@@ -20,14 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$success) {
             $message = "儲存失敗! " . implode(" ", $stmt->errorInfo());
-            $lastId = null;
         } else {
-            $message = "新增成功，ID：" . $db->lastInsertId();
-            $lastId = $db->lastInsertId();
+            $message = "新增成功，客戶編號：" . $db->lastInsertId();
         }
     } else {
         $message = "SQL 準備失敗: " . implode(" ", $db->errorInfo());
-        $lastId = null;
     }
 }
 ?>
@@ -37,105 +36,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新增客戶</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 微軟正黑體, 新細明體, 標楷體, Arial, sans-serif;
-        }
-        .menu {
-            background-color: dimgrey;
-            color: white;
-            padding: 10px;
-        }
-        .menu a {
-            color: white;
-            text-decoration: none;
-            margin-right: 10px;
-        }
-        .content {
-            margin: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 5px;
-        }
-        input[type="submit"] {
-            padding: 10px 20px;
-            background-color: dimgrey;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .message {
-            margin: 10px 0;
-            color: green;
-            font-weight: bold;
-        }
-        .hidden {
-            display: none;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: dimgrey;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin: 10px 0;
-        }
-    </style>
-    <script>
-        function toggleDisplay() {
-            const resultTable = document.getElementById("resultTable");
-            if (resultTable.classList.contains("hidden")) {
-                resultTable.classList.remove("hidden");
-            } else {
-                resultTable.classList.add("hidden");
-            }
-        }
-    </script>
+    <title>新增顧客</title>
+    <link rel="stylesheet" href="/assets/css/sub.css">
+    <link rel="stylesheet" href="/assets/css/admin_nav.css">
+    <link rel="stylesheet" href="/assets/css/add.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="menu">
-        <a href="../index.php">Home</a> |
-        <a href="consume_add.php">新增交易</a> |
-        <a href="product_add.php">新增產品</a>
+    <div class="top-nav">
+        <div class="nav-links">
+            <a href="dashboard.php" class="menu-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+            <a href="consume_list.php" class="menu-item"><i class="fa-solid fa-receipt"></i> 消費管理</a>
+            <a href="customer_list.php" class="menu-item"><i class="fa-solid fa-user-tag"></i> 客戶管理</a>
+            <a href="product_list.php" class="menu-item"><i class="fa-solid fa-hand-sparkles"></i> 產品管理</a>
+        </div>
     </div>
-    <div class="content">
-        <h2>新增客戶</h2>
-        <?php if (!empty($message)): ?>
-            <p class="message"><?php echo htmlspecialchars($message); ?></p>
-        <?php endif; ?>
-        <form id="customerForm" method="post" action="">
-            <table>
-                <tr>
-                    <td>客戶名稱：</td>
-                    <td><input type="text" name="name" required /></td>
-                </tr>
-                <tr>
-                    <td>聯絡電話：</td>
-                    <td><input type="text" name="phone" required /></td>
-                </tr>
-                <tr>
-                    <td>左手尺寸：</td>
-                    <td><input type="text" name="leftsize" placeholder='例如: [12,14,16,14,16]' required /></td>
-                </tr>
-                <tr>
-                    <td>右手尺寸：</td>
-                    <td><input type="text" name="rightsize" placeholder='例如: [12,14,16,14,16]' required /></td>
-                </tr>
-            </table>
-            <br />
-            <input type="submit" value="新增客戶" />
-        </form>
+
+    <div class="container">
+        <h1><i class="fas fa-user-plus"></i> 新增顧客</h1>
         
+        <a href="customer_list.php" class="back-btn">
+            <i class="fas fa-arrow-left"></i> 返回列表
+        </a>
+
+        <?php if (!empty($message)): ?>
+            <div class="message <?php echo strpos($message, '成功') !== false ? '' : 'error'; ?>">
+                <i class="<?php echo strpos($message, '成功') !== false ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'; ?>"></i>
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="form-container">
+            <form method="post" action="">
+                <div class="form-row">
+                    <div class="form-label">
+                        <i class="fas fa-user"></i> 客戶名稱
+                    </div>
+                    <div class="form-field">
+                        <input type="text" name="name" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">
+                        <i class="fas fa-phone"></i> 聯絡電話
+                    </div>
+                    <div class="form-field">
+                        <input type="text" name="phone" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">
+                        <i class="fas fa-hand-point-left"></i> 左手尺寸
+                    </div>
+                    <div class="form-field">
+                        <input type="text" name="leftsize" placeholder='例如: [12,14,16,14,16]' required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">
+                        <i class="fas fa-hand-point-right"></i> 右手尺寸
+                    </div>
+                    <div class="form-field">
+                        <input type="text" name="rightsize" placeholder='例如: [12,14,16,14,16]' required />
+                    </div>
+                </div>
+
+                <div class="submit-container">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-save"></i>
+                        新增客戶資料
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>

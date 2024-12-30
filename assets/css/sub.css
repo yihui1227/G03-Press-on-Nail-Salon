@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/earlyaccess/cwtexyen.css');
+@import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Yusei+Magic&display=swap');
+
+:root {
+    --primary-color: #FFD700;
+    --secondary-color: #FFF3B0;
+    --accent-color: #FFB347;
+    --background: #FFFAF0;
+    --card-bg: #FFFFFF;
+    --text-color: #5A4A41;
+    --add-button: #4CAF50;
+    --edit-button: #2196F3;
+    --hover-color: #FFF8DC;
+    --max-width: 1200px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "cwTeXYen", sans-serif;
+}
+
+body {
+    background-color: var(--background);
+    min-height: 100vh;
+}
+
+.container {
+    width: 70%;
+    max-width: var(--max-width);
+    padding: 0 20px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    color: var(--text-color);
+    text-align: center;
+    margin: 2rem 3rem;
+    font-size: 2.2em;
+    font-weight: 600;
+    width: 100%;
+}
+
+.menu {
+    background-color: var(--accent-color);
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-box {
+    margin: 20px 20px;
+    padding: 15px;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+}
+
+.search-box form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+.search-box input[type="text"] {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+.search-box input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+.btn-search {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-add {
+    background-color: var(--add-button);
+    color: white;
+}
+
+.btn-edit {
+    background-color: var(--edit-button);
+    color: white;
+}
+
+.btn:not(.btn-search):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.back-btn {
+    background-color: var(--text-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    font-family: 'cwTeXYen';
+    width: 110%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-weight: bold;
+    padding: 15px;
+    text-align: left;
+}
+
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+tr:hover {
+    background-color: var(--hover-color);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.pagination a {
+    padding: 8px 16px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s;
+    border: 2px solid var(--secondary-color);
+}
+
+.pagination a:hover,
+.pagination a.active {
+    background: var(--primary-color);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .search-box {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-box form {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

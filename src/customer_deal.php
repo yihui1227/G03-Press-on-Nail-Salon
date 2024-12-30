@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../condb.php");
+include('condb.php');
 
 // 顯示訊息的函數
 function showMessage($message, $type = 'success') {
@@ -102,258 +102,207 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>客戶資料管理系統</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .search-box {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        .search-box input[type="text"] {
-            width: 300px;
-            padding: 8px;
-            margin-right: 10px;
-        }
-        .search-box button {
-            padding: 8px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .pagination {
-            margin: 20px 0;
-            text-align: center;
-        }
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
-            margin: 0 4px;
-            border-radius: 4px;
-        }
-        .pagination a.active {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            border-radius: 3px;
-            color: white;
-            margin: 0 5px;
-        }
-        .btn-delete {
-            background-color: #ff4444;
-        }
-        .btn-edit {
-            background-color: #33b5e5;
-        }
-        .message {
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-        .message.success {
-            background-color: #dff0d8;
-            color: #3c763d;
-            border: 1px solid #d6e9c6;
-        }
-        .message.error {
-            background-color: #f2dede;
-            color: #a94442;
-            border: 1px solid #ebccd1;
-        }
-        .edit-form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            margin-top: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .form-submit {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .form-submit:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>編輯顧客</title>
+    <link rel="stylesheet" href="/assets/css/sub.css">
+    <link rel="stylesheet" href="/assets/css/admin_nav.css">
+    <link rel="stylesheet" href="/assets/css/edit.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>客戶資料管理系統</h1>
-    
-    <?php if (isset($_SESSION['message'])): ?>
-        <div class="message <?php echo $_SESSION['message_type']; ?>">
-            <?php 
-            echo $_SESSION['message'];
-            unset($_SESSION['message']);
-            unset($_SESSION['message_type']);
-            ?>
+    <div class="top-nav">
+        <div class="nav-links">
+            <a href="dashboard.php" class="menu-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+            <a href="consume_list.php" class="menu-item"><i class="fa-solid fa-receipt"></i> 消費管理</a>
+            <a href="customer_list.php" class="menu-item"><i class="fa-solid fa-user-tag"></i> 客戶管理</a>
+            <a href="product_list.php" class="menu-item"><i class="fa-solid fa-hand-sparkles"></i> 產品管理</a>
         </div>
-    <?php endif; ?>
-
-    <div class="search-box">
-        <form method="get" action="">
-            <input type="text" name="search" placeholder="搜尋客戶名稱或電話..." 
-                   value="<?php echo htmlspecialchars($search); ?>">
-            <button type="submit">搜尋</button>
-        </form>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>客戶名稱</th>
-                <th>聯絡電話</th>
-                <th>右手尺寸</th>
-                <th>左手尺寸</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($customers)): ?>
-                <tr>
-                    <td colspan="5" style="text-align: center;">沒有找到符合的資料</td>
-                </tr>
-            <?php else: ?>
-                <?php foreach ($customers as $customer): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($customer['name']); ?></td>
-                        <td><?php echo htmlspecialchars($customer['phone']); ?></td>
-                        <td><?php 
-                            $rightSize = json_decode($customer['rightsize']);
-                            echo htmlspecialchars(implode(', ', $rightSize ?? []));
-                        ?></td>
-                        <td><?php 
-                            $leftSize = json_decode($customer['leftsize']);
-                            echo htmlspecialchars(implode(', ', $leftSize ?? []));
-                        ?></td>
-                        <td>
-                            <a href="?delete_id=<?php echo $customer['customer_id']; ?>&csrf_token=<?php echo $_SESSION['csrf_token']; ?>" 
-                               onclick="return confirm('確定要刪除此筆資料嗎？')" 
-                               class="btn btn-delete">刪除</a>
-                            <a href="?edit_id=<?php echo $customer['customer_id']; ?>" 
-                               class="btn btn-edit">修改</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-    </table>
-
-    <div class="pagination">
-        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>" 
-               class="<?php echo ($page == $i) ? 'active' : ''; ?>">
-                <?php echo $i; ?>
-            </a>
-        <?php endfor; ?>
-    </div>
-
-    <?php if (isset($_GET['edit_id'])): ?>
-        <?php 
-        $edit_id = filter_var($_GET['edit_id'], FILTER_VALIDATE_INT);
-        $edit_sql = "SELECT * FROM Customer WHERE customer_id = ?";
-        $edit_stmt = $db->prepare($edit_sql);
-        $edit_stmt->execute([$edit_id]);
-        $edit_customer = $edit_stmt->fetch(PDO::FETCH_ASSOC);
+    <div class="container">
+        <h1><i class="fas fa-user-edit"></i> 編輯客戶</h1>
         
-        if ($edit_customer):
-            $rightSize = json_decode($edit_customer['rightsize']);
-            $leftSize = json_decode($edit_customer['leftsize']);
-        ?>
-            <div class="edit-form">
-                <h2>修改客戶資料</h2>
-                <form method="post" action="">
-                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <input type="hidden" name="id" value="<?php echo $edit_customer['customer_id']; ?>">
-                    
-                    <div class="form-group">
-                        <label for="name">客戶名稱：</label>
-                        <input type="text" name="name" id="name" 
-                               value="<?php echo htmlspecialchars($edit_customer['name']); ?>" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">聯絡電話：</label>
-                        <input type="text" name="phone" id="phone" 
-                               value="<?php echo htmlspecialchars($edit_customer['phone']); ?>" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="rightsize">右手尺寸（用逗號分隔）：</label>
-                        <input type="text" name="rightsize" id="rightsize" 
-                               value="<?php echo htmlspecialchars(implode(',', $rightSize ?? [])); ?>">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="leftsize">左手尺寸（用逗號分隔）：</label>
-                        <input type="text" name="leftsize" id="leftsize" 
-                               value="<?php echo htmlspecialchars(implode(',', $leftSize ?? [])); ?>">
-                    </div>
-                    
-                    <input type="submit" value="更新資料" class="form-submit">
-                </form>
+        <a href="customer_list.php" class="back-btn">
+            <i class="fas fa-arrow-left"></i> 返回列表
+        </a>
+
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="message <?php echo $_SESSION['message_type']; ?>">
+                <?php 
+                echo $_SESSION['message'];
+                unset($_SESSION['message']);
+                unset($_SESSION['message_type']);
+                ?>
             </div>
         <?php endif; ?>
-    <?php endif; ?>
 
+        <div class="search-box">
+            <form method="get" action="">
+                <input type="text" name="search" placeholder="搜尋客戶名稱或電話..." 
+                       value="<?php echo htmlspecialchars($search); ?>">
+                <button type="submit" class="btn btn-search">
+                    <i class="fas fa-search"></i> 搜尋
+                </button>
+            </form>
+        </div>
+
+        <table id="customerTable">
+            <thead>
+                <tr>
+                    <th>客戶名稱</th>
+                    <th>聯絡電話</th>
+                    <th>右手尺寸</th>
+                    <th>左手尺寸</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($customers)): ?>
+                    <tr>
+                        <td colspan="5" style="text-align: center;">沒有找到符合的資料</td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($customers as $customer): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($customer['name']); ?></td>
+                            <td><?php echo htmlspecialchars($customer['phone']); ?></td>
+                            <td><?php 
+                                $rightSize = json_decode($customer['rightsize']);
+                                echo htmlspecialchars(implode(', ', $rightSize ?? []));
+                            ?></td>
+                            <td><?php 
+                                $leftSize = json_decode($customer['leftsize']);
+                                echo htmlspecialchars(implode(', ', $leftSize ?? []));
+                            ?></td>
+                            <td>
+                                <i class="fas fa-trash icon-btn delete-btn" 
+                                onclick="deleteCustomer(<?php echo $customer['customer_id']; ?>)"></i>
+                                <i class="fas fa-edit icon-btn edit-btn" 
+                                onclick="startEdit(<?php echo $customer['customer_id']; ?>)"></i>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>" 
+                   class="<?php echo ($page == $i) ? 'active' : ''; ?>">
+                    <?php echo $i; ?>
+                </a>
+            <?php endfor; ?>
+        </div>
+    </div>
+
+    <script>
+        let currentEditingId = null;
+
+        function startEdit(id) {
+            if (currentEditingId && currentEditingId !== id) {
+                if (confirm('有未儲存的修改，是否要儲存？')) {
+                    saveEdit(currentEditingId);
+                } else {
+                    cancelEdit(currentEditingId);
+                }
+            }
+
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            currentEditingId = id;
+            row.classList.add('edit-mode');
+
+            const cells = row.cells;
+            
+            // 客戶名稱
+            cells[0].innerHTML = `<input type="text" value="${cells[0].textContent.trim()}" name="name" required>`;
+            
+            // 聯絡電話
+            cells[1].innerHTML = `<input type="text" value="${cells[1].textContent.trim()}" name="phone" required>`;
+            
+            // 右手尺寸
+            cells[2].innerHTML = `<input type="text" value="${cells[2].textContent.trim()}" name="rightsize">`;
+            
+            // 左手尺寸
+            cells[3].innerHTML = `<input type="text" value="${cells[3].textContent.trim()}" name="leftsize">`;
+            
+            // 操作按鈕
+            cells[4].innerHTML = `
+                <i class="fas fa-check icon-btn save-btn" onclick="confirmSave(${id})"></i>
+                <i class="fas fa-times icon-btn cancel-btn" onclick="cancelEdit(${id})"></i>
+                <i class="fas fa-trash icon-btn delete-btn" onclick="deleteCustomer(${id})"></i>
+            `;
+        }
+
+        function confirmSave(id) {
+            if (confirm('確定要儲存修改嗎？')) {
+                saveEdit(id);
+            }
+        }
+
+        function saveEdit(id) {
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            const formData = new FormData();
+            
+            formData.append('id', id);
+            formData.append('csrf_token', '<?php echo $_SESSION['csrf_token']; ?>');
+            formData.append('name', row.querySelector('input[name="name"]').value);
+            formData.append('phone', row.querySelector('input[name="phone"]').value);
+            formData.append('rightsize', row.querySelector('input[name="rightsize"]').value);
+            formData.append('leftsize', row.querySelector('input[name="leftsize"]').value);
+
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(() => {
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('儲存失敗，請稍後再試。');
+            });
+        }
+
+        function cancelEdit(id) {
+            window.location.reload();
+        }
+
+        function deleteCustomer(id) {
+            if (currentEditingId && currentEditingId !== id) {
+                if (confirm('有未儲存的修改，是否要儲存？')) {
+                    saveEdit(currentEditingId);
+                    return;
+                }
+                cancelEdit(currentEditingId);
+            }
+            
+            if (confirm('確定要刪除此筆資料嗎？')) {
+                window.location.href = `?delete_id=${id}&csrf_token=<?php echo $_SESSION['csrf_token']; ?>`;
+            }
+        }
+
+        // 攔截所有可能導致離開編輯狀態的操作
+        window.addEventListener('beforeunload', function(e) {
+            if (currentEditingId) {
+                e.preventDefault();
+                e.returnValue = '有未儲存的修改，確定要離開嗎？';
+            }
+        });
+
+        // 攔截分頁和搜尋操作
+        document.querySelectorAll('.pagination a, .search-box form').forEach(element => {
+            element.addEventListener('click', function(e) {
+                if (currentEditingId) {
+                    if (confirm('有未儲存的修改，是否要儲存？')) {
+                        e.preventDefault();
+                        saveEdit(currentEditingId);
+                    } else {
+                        cancelEdit(currentEditingId);
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
